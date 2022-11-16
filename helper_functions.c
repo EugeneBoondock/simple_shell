@@ -27,17 +27,13 @@ char *_getenv(const char *n)
 
 	for (ePtr = environ; *ePtr != NULL; ePtr++)
 	{
-		for (cPtr = *ePtr, nPtr = n; *cPtr == *nPtr; cPtr++, nPtr++)
-		{
-			if (*cPtr == '=')
-			{
-				break;
-			}
-		}
-		if ((*cPtr == '=') && (*nPtr == 0))
-		{
-			return (cPtr + 1);
-		}
+	for (cPtr = *ePtr, nPtr = n; *cPtr == *nPtr; cPtr++, nPtr++)
+	{
+	if (*cPtr == '=')
+	break;
+	}
+	if ((*cPtr == '=') && (*nPtr == 0))
+	return (cPtr + 1);
 	}
 	return (0);
 }
@@ -54,18 +50,13 @@ char *_strdup(char *str)
 	unsigned int i, n;
 
 	if (str == NULL)
-		return (NULL);
-
+	return (NULL);
 	n = _strlen(str) + 1;
-
 	str2 = malloc(sizeof(char) * n);
-
 	if (str2 == NULL)
-		return (NULL);
-
+	return (NULL);
 	for (i = 0; i < n; i++)
-		str2[i] = str[i];
-
+	str2[i] = str[i];
 	return (str2);
 }
 
@@ -82,12 +73,11 @@ char *_strcat(char *dest, char *src)
 
 	for (i = 0; dest[i] != '\0'; i++)
 	{
-		output += 1;
+	output += 1;
 	}
-
 	for (j = 0; src[j] != '\0'; j++)
 	{
-		dest[output + j] = src[j];
+	dest[output + j] = src[j];
 	}
 	dest[output + j] = '\0';
 	return (dest);
@@ -108,52 +98,48 @@ void *pathfinder(char *cmd)
 
 	path_array = malloc(sizeof(char *) * (count + 1));
 	if (path_array == NULL)
-		return (NULL);
-
+	return (NULL);
 	path_tok = strtok(path, ":");
 	if (_getenv("PATH")[0] == ':')
 	{
-		if (stat(cmd, &buf) == 0)
-		{
-			free(path_array);
-			free(path);
-			return (_strdup(cmd));
-		}
+	if (stat(cmd, &buf) == 0)
+	free(path_array);
+	free(path);
+	return (_strdup(cmd));
 	}
 	if (stat(cmd, &buf) == 0)
 	{
-		free(path_array);
-		free(path);
-		return (_strdup(cmd));
+	free(path_array);
+	free(path);
+	return (_strdup(cmd));
 	}
 	while (path_tok != NULL)
 	{
-		path_array[i++] = path_tok;
-		path_tok = strtok(NULL, ":");
+	path_array[i++] = path_tok;
+	path_tok = strtok(NULL, ":");
 	}
-
 	path_array[i] = '\0';
 	for (j = 0; path_array[j];)
 	{
-		free(new_path);
-		aux = strtok(s2, "\n");
-		count_path = (_strlen(path_array[j]) + _strlen(aux) + 2);
-		new_path = malloc(sizeof(char) * count_path);
-		if (new_path == NULL)
-			return (NULL);
-		_strcpy(new_path, path_array[j]);
-		_strcat(new_path, "/");
-		_strcat(new_path, aux);
-		_strcat(new_path, "\0");
-		if (stat(new_path, &buf) == 0)
-		{
-			free(path);
-			free(path_array);
-			return (new_path);
-		}
-		else
-			new_path[0] = 0;
-		j++;
+	free(new_path);
+	aux = strtok(s2, "\n");
+	count_path = (_strlen(path_array[j]) + _strlen(aux) + 2);
+	new_path = malloc(sizeof(char) * count_path);
+	if (new_path == NULL)
+	return (NULL);
+	_strcpy(new_path, path_array[j]);
+	_strcat(new_path, "/");
+	_strcat(new_path, aux);
+	_strcat(new_path, "\0");
+	if (stat(new_path, &buf) == 0)
+	{
+	free(path);
+	free(path_array);
+	return (new_path);
+	}
+	else
+	new_path[0] = 0;
+	j++;
 	}
 	free(path_array);
 	free(path);
