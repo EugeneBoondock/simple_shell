@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
 * main - main function of shell program.
 * @argc: int saving arguments
@@ -19,29 +18,24 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		if (isatty(STDIN_FILENO) == 1)
-			write(1, ":$ ", 11);
-
-		line = getline(&string, &buffer, stdin);
-
-		if (line == -1)
-		{
-			if (isatty(STDIN_FILENO) == 1)
-				write(1, "\n", 1);
-
-			free(string);
-			break;
-		}
-		changing_tab(string);
-
-		if (*string == '\0')
-			continue;
-
-		if (not_empty(string) == -1)
-		{
-			cleaned_string = clean_spaces(string);
-			status = reading(strtok(cleaned_string, "\n"), argv[0], string);
-		}
+	if (isatty(STDIN_FILENO) == 1)
+	write(1, ":$ ", 11);
+	line = getline(&string, &buffer, stdin);
+	if (line == -1)
+	{
+	if (isatty(STDIN_FILENO) == 1)
+	write(1, "\n", 1);
+	free(string);
+	break;
+	}
+	changing_tab(string);
+	if (*string == '\0')
+	continue;
+	if (not_empty(string) == -1)
+	{
+	cleaned_string = clean_spaces(string);
+	status = reading(strtok(cleaned_string, "\n"), argv[0], string);
+	}
 	}
 	return (status);
 }
@@ -53,7 +47,6 @@ int main(int argc, char *argv[])
 * @string: string to be passed
 * Return: 0
 */
-
 int reading(char *s, char *shellname, char *string)
 {
 	char *token = NULL;
@@ -63,42 +56,37 @@ int reading(char *s, char *shellname, char *string)
 	int count = count_spaces(s);
 
 	command_arr = malloc(sizeof(char *) * (count + 1));
-
 	token = strtok(s, " ");
 	if (_strcmp(s, "exit") == 0)
 	{
-		free(s);
-		free(string);
-		free(command_arr);
-		exit(0);
+	free(s);
+	free(string);
+	free(command_arr);
+	exit(0);
 	}
-
 	if (_strcmp(s, "env") == 0)
 	{
-		free(s);
-		free(command_arr);
-		return (_printenv());
+	free(s);
+	free(command_arr);
+	return (_printenv());
 	}
-
 	while (token)
 	{
-		command_arr[i] = _strdup(token);
-		i++;
-		token = strtok(NULL, " ");
+	command_arr[i] = _strdup(token);
+	i++;
+	token = strtok(NULL, " ");
 	}
 	if (command_arr == NULL)
 	{
-		free(s);
+	free(s);
 	}
 	command_arr[i] = NULL;
 	free(s);
-
 	ret = execute(command_arr, shellname);
 	i = 0;
 	while (i < count)
-		free(command_arr[i++]);
+	free(command_arr[i++]);
 	free(command_arr);
-
 	return (ret);
 }
 
@@ -117,37 +105,36 @@ int execute(char **cmd, char *shellname)
 	const char *dir = cmd[1];
 
 	command = cmd[0];
-
 	if (_strcmp(command, "cd") == 0)
 	{
-		if (dir == NULL)
-			return (chdir(_getenv("HOME")));
-		if (chdir(dir) != 0)
-		{
-			perror(dir);
-			return (1);
-		}
-		else
-			return (chdir(dir));
+	if (dir == NULL)
+	return (chdir(_getenv("HOME")));
+	if (chdir(dir) != 0)
+	{
+	perror(dir);
+	return (1);
+	}
+	else
+	return (chdir(dir));
 	}
 	path = pathfinder(command);
 
 	if (path == NULL && _strcmp(command, "cd") != 0)
 	{
-		write(2, shellname, _strlen(shellname));
-		write(2, " :1 ", 5);
-		write(2, command, _strlen(command));
-		write(2, ": not found\n", 12);
-		return (127);
+	write(2, shellname, _strlen(shellname));
+	write(2, " :1 ", 5);
+	write(2, command, _strlen(command));
+	write(2, ": not found\n", 12);
+	return (127);
 	}
 	child = fork();
 	if (child != 0)
-		stat = parent_wait(child, &status);
+	stat = parent_wait(child, &status);
 	else if (child == 0 && _strcmp(command, "cd") != 0)
 	{
-		execve(path, cmd, environ);
-		perror("Error:");
-		exit(-1);
+	execve(path, cmd, environ);
+	perror("Error:");
+	exit(-1);
 	}
 	free(path);
 	return (stat);
